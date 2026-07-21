@@ -1,0 +1,72 @@
+name: "Daily LLM & Agent repositories"
+
+on:
+  schedule:
+    # GitHub cron uses UTC. 02:00 UTC = 10:00 Asia/Shanghai.
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-llm-agent-ranking
+  cancel-in-progress: false
+
+jobs:
+  collect-and-notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore star snapshots
+        shell: bash
+        run: |
+          mkdir -p state output
+          if git fetch origin data:refs/remotes/origin/data 2>/dev/null; then
+            git show origin/data:stars.json > state/stars.json
+          else
+            printf '{"version":1,"snapshots":[]}\n' > state/stars.json
+          fi
+
+      - name: Collect and rank repositories
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/collect_repos.py --state state/stars.json --output output/repos.json --limit 10
+
+      - name: Send Feishu card
+        env:
+          FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          FEISHU_SIGNING_SECRET: ${{ secrets.FEISHU_SIGNING_SECRET }}
+        run: python scripts/send_feishu.py output/repos.json
+
+      - name: Save star snapshots to data branch
+        if: always() && hashFiles('state/stars.json') != ''
+        shell: bash
+        run: |
+          cp state/stars.json "$RUNNER_TEMP/stars.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git show-ref --verify --quiet refs/remotes/origin/data; then
+            git switch --force-create data origin/data
+          else
+            git switch --orphan data
+            git rm -rf . || true
+          fi
+          cp "$RUNNER_TEMP/stars.json" stars.json
+          git add stars.json
+          if git diff --cached --quiet; then
+            echo "No snapshot changes"
+          else
+            git commit -m "chore: update daily star snapshots"
+            git push origin data
+          fi
