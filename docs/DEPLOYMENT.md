@@ -47,12 +47,13 @@ Add repository variables under `Settings → Secrets and variables → Actions �
 
 ### Delivery schedule
 
-GitHub cron expressions use UTC. Edit `.github/workflows/daily-radar.yml`:
+The workflow uses an explicit IANA timezone, so its cron expression is written directly in Beijing local time. Edit `.github/workflows/daily-radar.yml`:
 
 ```yaml
 on:
   schedule:
-    - cron: "7 3 * * *" # 11:07 Asia/Shanghai
+    - cron: "45 11 * * *"
+      timezone: "Asia/Shanghai"
 ```
 
 Scheduled workflows may be delayed during periods of high Actions load.[^3] If exact-to-the-minute delivery matters, GitHub-hosted cron is not a hard real-time scheduler.
@@ -97,7 +98,7 @@ Confirm that:
 1. The workflow exists on the fork's default branch
 2. Actions are enabled in the fork
 3. The repository has not been inactive long enough for GitHub to disable scheduled workflows
-4. The cron expression is valid UTC syntax
+4. The cron expression is valid POSIX syntax and its `timezone` is a valid IANA timezone
 
 ## 🔗 References
 
