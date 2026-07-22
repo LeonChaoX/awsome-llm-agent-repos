@@ -1,8 +1,10 @@
-# Agent Radar
+<p align="center">
+  <img src="assets/agent-radar-social-preview.svg" alt="Agent Radar — trending LLM and AI Agent repositories ranked by seven-day Star growth" width="100%">
+</p>
 
-_A zero-cost, fork-and-run intelligence feed for the fastest-growing LLM and AI Agent repositories on GitHub._
+# Agent Radar — Trending LLM & AI Agent Repositories
 
----
+<p align="center"><strong>A zero-cost, fork-and-run GitHub Action that finds fast-growing open-source AI projects and delivers a daily Top 10.</strong></p>
 
 <p align="center">
   <a href="https://github.com/LeonChaoX/awsome-llm-agent-repos/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/LeonChaoX/awsome-llm-agent-repos/actions/workflows/ci.yml/badge.svg"></a>
@@ -13,9 +15,27 @@ _A zero-cost, fork-and-run intelligence feed for the fastest-growing LLM and AI 
 </p>
 
 <p align="center"><strong>One fork. One secret. Your daily edge in open-source AI.</strong></p>
-<p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
+<p align="center">
+  <a href="#-start-in-three-minutes">Quick start</a> ·
+  <a href="docs/CHANNELS.md">Channels</a> ·
+  <a href="#-how-ranking-works">Ranking</a> ·
+  <a href="docs/LAUNCH_PLAYBOOK.md">Share</a> ·
+  English · <a href="README.zh-CN.md">简体中文</a>
+</p>
 
-Agent Radar discovers recently created LLM, Agent, MCP, RAG, and multi-agent projects, estimates or measures their seven-day Star growth, ranks the strongest ten, and delivers a polished digest to every channel you configure. No server, database, paid API, or third-party dependency is required.
+Agent Radar monitors GitHub for recently created **LLM**, **AI Agent**, **MCP**, **RAG**, and **multi-agent** projects. It estimates or measures their seven-day Star growth, ranks the strongest ten, and delivers a polished digest to Feishu, Slack, Telegram, WeCom, Discord, or any webhook you configure. No server, database, paid API, or third-party Python dependency is required.
+
+> ⭐ If Agent Radar helps you discover useful open-source AI tools before they become mainstream, Star the repository so more builders can find it.
+
+## ✨ Why Agent Radar
+
+| What you need | What Agent Radar provides |
+| ------------- | ------------------------- |
+| Find emerging projects, not yesterday's famous repos | Momentum ranking based primarily on seven-day Star growth |
+| A digest where your team already works | Native Feishu, Slack, Telegram, WeCom, and Discord delivery |
+| No service to deploy or maintain | A scheduled GitHub Action with compact state on a `data` branch |
+| Metrics you can trust | Measured growth when available and visibly marked estimates during warm-up |
+| Freedom to extend the workflow | MIT license, zero runtime dependencies, and a versioned generic webhook |
 
 ## 🚀 Start in three minutes
 
@@ -147,8 +167,9 @@ python scripts/notify.py output/repos.json --dry-run
 - Use the issue templates for bugs, channels, and feature proposals
 - Follow the [Code of Conduct](CODE_OF_CONDUCT.md)
 - Report credential exposure or vulnerabilities through [SECURITY.md](SECURITY.md)
+- Share your deployment through the [Showcase issue template](https://github.com/LeonChaoX/awsome-llm-agent-repos/issues/new?template=showcase.yml)
 
-If Agent Radar earns a place in your daily workflow, a Star helps other builders discover it. Channel providers, ranking improvements, translations, and documentation fixes are all welcome.
+If Agent Radar earns a place in your daily workflow, a Star helps other builders discover it. Channel providers, ranking improvements, translations, documentation fixes, and real-world setup stories are all welcome. Maintainers can use the [launch and discovery playbook](docs/LAUNCH_PLAYBOOK.md) for repository metadata, Topics, social preview setup, and release promotion.
 
 ## 📄 License
 
