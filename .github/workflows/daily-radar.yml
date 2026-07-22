@@ -2,8 +2,9 @@ name: Agent Radar Daily
 
 on:
   schedule:
-    # GitHub cron uses UTC. 02:00 UTC = 10:00 Asia/Shanghai.
-    - cron: "0 2 * * *"
+    # GitHub cron uses UTC. 03:07 UTC = 11:07 Asia/Shanghai.
+    # Minute 07 avoids the high-load start-of-hour scheduling window.
+    - cron: "7 3 * * *"
   workflow_dispatch:
 
 permissions:
