@@ -52,7 +52,7 @@ GitHub cron expressions use UTC. Edit `.github/workflows/daily-radar.yml`:
 ```yaml
 on:
   schedule:
-    - cron: "0 2 * * *" # 10:00 Asia/Shanghai
+    - cron: "7 3 * * *" # 11:07 Asia/Shanghai
 ```
 
 Scheduled workflows may be delayed during periods of high Actions load.[^3] If exact-to-the-minute delivery matters, GitHub-hosted cron is not a hard real-time scheduler.

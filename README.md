@@ -42,7 +42,7 @@ Feishu signature verification is supported through the optional `FEISHU_SIGNING_
 
 ### 3. Run the radar
 
-Open `Actions → Agent Radar Daily → Run workflow`. A successful run delivers the first digest and creates a dedicated `data` branch for Star snapshots. The schedule then runs daily at `02:00 UTC`, which is `10:00 Asia/Shanghai`.
+Open `Actions → Agent Radar Daily → Run workflow`. A successful run delivers the first digest and creates a dedicated `data` branch for Star snapshots. The schedule then runs daily at `03:07 UTC`, which is `11:07 Asia/Shanghai`.
 
 See the [channel guide](docs/CHANNELS.md) for provider setup and [deployment](docs/DEPLOYMENT.md) for the complete walkthrough.
 
