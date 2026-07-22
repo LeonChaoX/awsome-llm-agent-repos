@@ -42,7 +42,7 @@ Feishu signature verification is supported through the optional `FEISHU_SIGNING_
 
 ### 3. Run the radar
 
-Open `Actions → Agent Radar Daily → Run workflow`. A successful run delivers the first digest and creates a dedicated `data` branch for Star snapshots. The schedule then runs daily at `03:07 UTC`, which is `11:07 Asia/Shanghai`.
+Open `Actions → Agent Radar Daily → Run workflow`. A successful run delivers the first digest and creates a dedicated `data` branch for Star snapshots. The schedule then runs daily at `11:45 Asia/Shanghai`.
 
 See the [channel guide](docs/CHANNELS.md) for provider setup and [deployment](docs/DEPLOYMENT.md) for the complete walkthrough.
 
@@ -107,7 +107,7 @@ Optional repository variables live under `Settings → Secrets and variables →
 | `REPOSITORY_LIMIT` | `10` | `1`–`20` | Repositories per digest |
 | `LOOKBACK_DAYS` | `180` | Positive integer | Maximum project age in candidate search |
 
-To change delivery time, edit the cron expression in `.github/workflows/daily-radar.yml`. GitHub notes that scheduled workflows can be delayed during high-load periods, especially near the start of an hour.[^4]
+To change delivery time, edit the local-time cron expression in `.github/workflows/daily-radar.yml`; its `timezone` is explicitly set to `Asia/Shanghai`. GitHub notes that scheduled workflows can be delayed during high-load periods, especially near the start of an hour.[^4]
 
 ## 🧩 Add a channel
 
