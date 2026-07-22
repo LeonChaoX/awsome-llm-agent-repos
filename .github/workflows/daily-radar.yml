@@ -1,4 +1,4 @@
-name: "Daily LLM & Agent repositories"
+name: Agent Radar Daily
 
 on:
   schedule:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: daily-llm-agent-ranking
+  group: daily-agent-radar
   cancel-in-progress: false
 
 jobs:
@@ -41,13 +41,33 @@ jobs:
       - name: Collect and rank repositories
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/collect_repos.py --state state/stars.json --output output/repos.json --limit 10
+          REPOSITORY_LIMIT: ${{ vars.REPOSITORY_LIMIT || '10' }}
+          LOOKBACK_DAYS: ${{ vars.LOOKBACK_DAYS || '180' }}
+        run: >-
+          python scripts/collect_repos.py
+          --state state/stars.json
+          --output output/repos.json
+          --limit "$REPOSITORY_LIMIT"
+          --lookback-days "$LOOKBACK_DAYS"
 
-      - name: Send Feishu card
+      - name: Deliver to configured channels
         env:
           FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           FEISHU_SIGNING_SECRET: ${{ secrets.FEISHU_SIGNING_SECRET }}
-        run: python scripts/send_feishu.py output/repos.json
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GENERIC_WEBHOOK_URL: ${{ secrets.GENERIC_WEBHOOK_URL }}
+        run: python scripts/notify.py output/repos.json
+
+      - name: Publish report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-radar-${{ github.run_number }}
+          path: output/repos.json
+          retention-days: 7
 
       - name: Save star snapshots to data branch
         if: always() && hashFiles('state/stars.json') != ''

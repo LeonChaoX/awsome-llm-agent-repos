@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a reproducible problem in collection, ranking, state, or delivery.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed all webhook URLs, tokens, chat IDs, and private data.
+          required: true
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include the expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Provide minimal steps or a sanitized report fixture.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Area
+      options: [Collection, Ranking, Snapshots, Feishu, Slack, Telegram, WeCom, Discord, Generic webhook, Documentation]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Sanitized logs
+      render: text
+  - type: input
+    attributes:
+      label: Commit or fork URL
+      placeholder: https://github.com/account/repository/commit/...

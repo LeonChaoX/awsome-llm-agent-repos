@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from collect_repos import calculate_growth, load_state, rank_repositories, update_state
-from send_feishu import build_payload, signing_fields
+from channels.feishu import FeishuChannel, signing_fields
 
 
 def repo(name: str, stars: int, description: str = "LLM agent framework") -> dict:
@@ -85,8 +85,8 @@ class StateAndCardTests(unittest.TestCase):
             item.update({"stars": item.pop("stargazers_count"), "weekly_growth": index})
             item["growth_exact"] = True
             repositories.append(item)
-        payload = build_payload(
-            {"date": "2026-07-21", "repositories": repositories}, secret=""
+        payload = FeishuChannel("https://example.invalid").build_payload(
+            {"date": "2026-07-21", "repositories": repositories}
         )
         rendered = json.dumps(payload, ensure_ascii=False)
         self.assertEqual(payload["msg_type"], "interactive")
@@ -101,4 +101,3 @@ class StateAndCardTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -1,0 +1,35 @@
+name: New channel request
+description: Propose a notification platform with an official bot or webhook API.
+title: "[Channel]: "
+labels: [channel, enhancement]
+body:
+  - type: input
+    attributes:
+      label: Platform
+      placeholder: Microsoft Teams
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Official API documentation
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Authentication and required Secrets
+      description: Name credential types only. Never paste real values.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Message capabilities and limits
+      description: Rich text, cards, size limits, rate limits, and response behavior.
+  - type: checkboxes
+    attributes:
+      label: Readiness
+      options:
+        - label: The platform provides an official server-side API.
+          required: true
+        - label: I reviewed docs/ADDING_A_CHANNEL.md.
+          required: true
