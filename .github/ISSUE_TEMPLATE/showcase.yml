@@ -1,0 +1,43 @@
+name: Share your Agent Radar setup
+description: Show the community where Agent Radar delivers your daily AI repository digest.
+title: "[Showcase]: "
+labels:
+  - showcase
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your setup. Remove webhook URLs, tokens, chat IDs, and any private workspace information before posting.
+  - type: input
+    id: destination
+    attributes:
+      label: Delivery destination
+      description: Which supported channel or custom integration are you using?
+      placeholder: Feishu, Slack, Telegram, WeCom, Discord, n8n, Notion...
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: How you use Agent Radar
+      description: Tell other builders who receives the digest and what decisions it supports.
+      placeholder: Our AI platform team reviews the daily Top 10 during stand-up...
+    validations:
+      required: true
+  - type: textarea
+    id: customization
+    attributes:
+      label: Customizations
+      description: Share safe configuration choices, ranking changes, or downstream automations. Never paste Secrets.
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot or public link
+      description: Optional. Redact names, private messages, tokens, URLs containing secrets, and workspace identifiers.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed all credentials and private identifiers from this submission.
+          required: true

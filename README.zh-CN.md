@@ -1,8 +1,10 @@
-# Agent Radar
+<p align="center">
+  <img src="assets/agent-radar-social-preview.svg" alt="Agent Radar：按照 7 日 Star 增长发现热门 LLM 与 AI Agent 仓库" width="100%">
+</p>
 
-_零成本、Fork 即用的 GitHub LLM 与 AI Agent 热门项目情报雷达。_
+# Agent Radar — LLM 与 AI Agent 热门项目雷达
 
----
+<p align="center"><strong>零成本、Fork 即用：每天发现快速增长的开源 AI 项目并推送 Top 10。</strong></p>
 
 <p align="center">
   <a href="https://github.com/LeonChaoX/awsome-llm-agent-repos/actions/workflows/ci.yml"><img alt="CI 状态" src="https://github.com/LeonChaoX/awsome-llm-agent-repos/actions/workflows/ci.yml/badge.svg"></a>
@@ -12,9 +14,27 @@ _零成本、Fork 即用的 GitHub LLM 与 AI Agent 热门项目情报雷达。_
 </p>
 
 <p align="center"><strong>Fork 一次，配置一个 Secret，每天掌握开源 AI 新趋势。</strong></p>
-<p align="center"><a href="README.md">English</a> · 简体中文</p>
+<p align="center">
+  <a href="#-三分钟开始使用">快速开始</a> ·
+  <a href="docs/CHANNELS.md">推送渠道</a> ·
+  <a href="#-排名是否真实">排名算法</a> ·
+  <a href="docs/LAUNCH_PLAYBOOK.md">分享项目</a> ·
+  <a href="README.md">English</a> · 简体中文
+</p>
 
-Agent Radar 每天发现近期创建的 LLM、Agent、MCP、RAG 与多智能体项目，估算或计算它们的 7 日 Star 增量，选出增长最快的 10 个仓库，并推送到你配置的所有消息渠道。无需服务器、数据库、付费 API 或第三方 Python 依赖。
+Agent Radar 持续发现 GitHub 上近期创建的 **LLM**、**AI Agent**、**MCP**、**RAG** 与**多智能体**项目，估算或计算它们的 7 日 Star 增量，选出增长最快的 10 个仓库，并推送到飞书、Slack、Telegram、企业微信、Discord 或任意 Webhook。无需服务器、数据库、付费 API 或第三方 Python 依赖。
+
+> ⭐ 如果 Agent Radar 能帮你更早发现值得关注的开源 AI 工具，欢迎 Star，让更多开发者找到它。
+
+## ✨ 为什么选择 Agent Radar
+
+| 你的需求 | Agent Radar 的方案 |
+| -------- | ------------------ |
+| 发现正在爆发的新项目，而不是重复查看知名仓库 | 以 7 日 Star 增长为核心的趋势排名 |
+| 在团队已有协作工具中接收榜单 | 原生支持飞书、Slack、Telegram、企业微信与 Discord |
+| 不想部署和维护服务 | 使用 GitHub Actions 定时运行，快照保存在 `data` 分支 |
+| 需要可信而透明的数据 | 有历史时展示真实增量，冷启动估算值明确标记 |
+| 希望自由扩展 | MIT 协议、零运行时依赖、通用版本化 Webhook |
 
 ## 🚀 三分钟开始使用
 
@@ -121,7 +141,9 @@ python scripts/collect_repos.py --state state/stars.json --output output/repos.j
 python scripts/notify.py output/repos.json --dry-run
 ```
 
-新增平台请阅读[新增渠道指南](docs/ADDING_A_CHANNEL.md)，提交 PR 前请阅读[贡献指南](CONTRIBUTING.md)。如果项目对你有帮助，欢迎 Star、分享或贡献新的 Provider。
+新增平台请阅读[新增渠道指南](docs/ADDING_A_CHANNEL.md)，提交 PR 前请阅读[贡献指南](CONTRIBUTING.md)。也欢迎通过 [Showcase 模板](https://github.com/LeonChaoX/awsome-llm-agent-repos/issues/new?template=showcase.yml)分享你的真实部署方式。维护者可参考[项目发布与曝光手册](docs/LAUNCH_PLAYBOOK.md)配置仓库描述、Topics、社交分享图和推广内容。
+
+如果项目对你有帮助，欢迎 Star、分享或贡献新的 Provider。
 
 ## 📄 开源许可
 
