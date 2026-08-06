@@ -2,8 +2,9 @@ name: Agent Radar Daily
 
 on:
   schedule:
-    # GitHub cron uses UTC. 02:00 UTC = 10:00 Asia/Shanghai.
-    - cron: "0 2 * * *"
+    # Daily at 11:45 Beijing time. Edit the cron directly in local time.
+    - cron: "45 11 * * *"
+      timezone: "Asia/Shanghai"
   workflow_dispatch:
 
 permissions:
@@ -19,12 +20,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -63,7 +64,7 @@ jobs:
         run: python scripts/notify.py output/repos.json
 
       - name: Publish report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: agent-radar-${{ github.run_number }}
           path: output/repos.json

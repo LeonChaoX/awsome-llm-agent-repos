@@ -24,6 +24,8 @@ STATE_VERSION = 1
 SNAPSHOT_RETENTION_DAYS = 21
 DEFAULT_LOOKBACK_DAYS = 180
 MAX_CANDIDATES = 600
+DEDUP_WINDOW_DAYS = 7  # repos seen in this window are penalized
+MAX_REPEAT_RATIO = 0.10  # at most 10% of the final list may be repeats
 
 SEARCH_PHRASES = (
     "llm in:name,description",
@@ -174,6 +176,16 @@ def rank_repositories(
     today: date | None = None,
 ) -> list[dict[str, Any]]:
     today = today or date.today()
+
+    # Build the set of repos recommended within the dedup window
+    cutoff = today - timedelta(days=DEDUP_WINDOW_DAYS)
+    recently_recommended: set[str] = set()
+    for entry in state.get("recommended_history", []):
+        if date.fromisoformat(entry["date"]) > cutoff:
+            recently_recommended.update(entry["repos"])
+
+    max_repeats = max(0, math.floor(limit * MAX_REPEAT_RATIO))
+
     ranked: list[dict[str, Any]] = []
     for repo in candidates:
         relevance = relevance_score(repo)
@@ -207,11 +219,35 @@ def rank_repositories(
             }
         )
     ranked.sort(key=lambda item: (item["score"], item["stars"]), reverse=True)
-    return ranked[:limit]
+
+    # Apply dedup: allow at most max_repeats items from recently_recommended.
+    # Fill the list greedily: fresh repos first, then repeats up to the cap.
+    fresh: list[dict[str, Any]] = []
+    repeats: list[dict[str, Any]] = []
+    for item in ranked:
+        if item["full_name"].lower() in recently_recommended:
+            repeats.append(item)
+        else:
+            fresh.append(item)
+
+    result = fresh[:limit]
+    remaining_slots = limit - len(result)
+    if remaining_slots > 0:
+        allowed = min(remaining_slots, max_repeats)
+        result.extend(repeats[:allowed])
+        # If still not enough (very small candidate pool), pad with more repeats
+        remaining_slots = limit - len(result)
+        if remaining_slots > 0:
+            result.extend(repeats[allowed : allowed + remaining_slots])
+
+    # Re-sort the final selection by original score
+    result.sort(key=lambda item: (item["score"], item["stars"]), reverse=True)
+    return result[:limit]
 
 
 def update_state(
-    state: dict[str, Any], candidates: list[dict[str, Any]], today: date
+    state: dict[str, Any], candidates: list[dict[str, Any]], today: date,
+    recommended: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     snapshots = [item for item in state["snapshots"] if item.get("date") != today.isoformat()]
     snapshots.append(
@@ -223,7 +259,22 @@ def update_state(
     oldest = today - timedelta(days=SNAPSHOT_RETENTION_DAYS)
     snapshots = [item for item in snapshots if date.fromisoformat(item["date"]) >= oldest]
     snapshots.sort(key=lambda item: item["date"])
-    return {"version": STATE_VERSION, "snapshots": snapshots}
+
+    # Update recommended history for dedup
+    history = [
+        entry for entry in state.get("recommended_history", [])
+        if entry.get("date") != today.isoformat()
+    ]
+    if recommended is not None:
+        history.append({
+            "date": today.isoformat(),
+            "repos": [r["full_name"].lower() for r in recommended],
+        })
+    cutoff = today - timedelta(days=DEDUP_WINDOW_DAYS)
+    history = [entry for entry in history if date.fromisoformat(entry["date"]) > cutoff]
+    history.sort(key=lambda entry: entry["date"])
+
+    return {"version": STATE_VERSION, "snapshots": snapshots, "recommended_history": history}
 
 
 def main() -> int:
@@ -249,7 +300,7 @@ def main() -> int:
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     args.state.parent.mkdir(parents=True, exist_ok=True)
     args.state.write_text(
-        json.dumps(update_state(state, candidates, today), ensure_ascii=False, indent=2) + "\n",
+        json.dumps(update_state(state, candidates, today, repositories), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     print(f"Selected {len(repositories)} repositories from {len(candidates)} candidates")
